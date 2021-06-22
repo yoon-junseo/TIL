@@ -8,8 +8,6 @@
 
 ## 웹팩 설치하기
 
-<hr />
-
 1. npm init
 
 2. npm i react react-dom
@@ -22,12 +20,9 @@
 > - @babel/core : 기본적인 바벨, 최신 문법으로 바꿔준다. <br />
 > - @babel/preset-env : 사용환경에 맞게 알아서 바꿔준다. <br />
 > - @babel/preset-react : jsx로 바꿔주는것 <br/>
-> - babel-loader : 바벨이랑 웹팩 연결해주는것 <br/>
->   <br />
+> - babel-loader : 바벨이랑 웹팩 연결해주는것 <br/> > <br />
 
 ## 웹팩의 기본 틀
-
-<hr />
 
 ```javascript
 const path = require("path");
@@ -55,8 +50,6 @@ module.exports = {
 
 ## 구성 요소
 
-<hr />
-
 ### 1. <strong>Entry</strong>
 
 _entry_ 속성은 번들링을 하려고 하는 js 파일들의 시작 경로를 나타낸다.
@@ -64,7 +57,7 @@ _entry_ 속성은 번들링을 하려고 하는 js 파일들의 시작 경로를
 ```javascript
 // webpack.config.js
 module.exports = {
-  entry: "./client.js", // 1번
+  entry: "./client.js",
 };
 ```
 
