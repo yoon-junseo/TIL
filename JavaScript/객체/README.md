@@ -210,7 +210,7 @@ Object.keys(o); // => [] 열거가 불가능하기 때문에 빈 배열을 반�
   5. 데이터 프로퍼티의 configurable 속성 값이 false라면, 기존의 writable 속성을 false에서 true로 바꿀 수 없다. 하지만 true에서 false로는 가능하다.
   6. 데이터 프로퍼티의 configurable 속성 값과 writable 속성 값이 false라면, 프로퍼티 값을 바꿀 수 없다. 하지만 프로퍼티의 configurable 속성 값이 true고, writable 속성 값이 false인 경우에는 프로퍼티의 값을 바꿀 수 있다. (writable을 true로 만들고 값을 수정하고 writable을 다시 false로 바꾸면 된다.)
 
-- extensible 속성 : 객체에 새 프로퍼티를 추가할 수 이쓴지 여부를 결정한다.
+- extensible 속성 : 객체에 새 프로퍼티를 추가할 수 있는지 여부를 결정한다.
   > - object.isExtensible(Object o) : 확장할 수 있는 객체인지 알아보는 메서드
   > - object.preventExtensions(Object o) : 객체의 확장을 막는 메서드 -> 객체를 확장할 수 없도록 설정하면, 다시 이전 상태로 돌아갈 수 없다.
   > - extensible 의 목적 : _잠겨있는_ 객체의 상태를 고정하고, 외부에서 변경하는 것을 막는 것이다.
