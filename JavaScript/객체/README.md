@@ -159,3 +159,61 @@ let o = {
     set accessorProperty() { ... }
 };
 ```
+
+### 프로퍼티 속성
+
+- 프로퍼티의 3가지 속성
+  1. writable - 프로퍼티 값의 변경 가능 여부를 결정
+  2. enumerable - 프로퍼티가 열거될 수 있는지 여부를 결정
+  3. configurable - configurable 속성 + writable 속성 + enumerable 속성 값의 변경 가능 여부를 결정 <br /> -> 객체를 고정시킬 수 있다. (lock down)
+     > - 데이터 프로퍼티의 4가지 속성 - value, writable, enumerable, configurable
+     > - 접근자 프로퍼티의 4가지 속성 - get, set, enumerable, configurable
+     >   <br /> 해당 프로퍼티 속성들을 표현하기 위해 _property descriptor_ 사용
+     > - 프로퍼티 3대 속성의 경우 boolean 값을 갖고, get과 set은 함수를 갖는다.
+
+```javascript
+// {value: 1, writable: true, enumerable: true, configurable: true}를 반환
+Object.getOwnPropertyDescriptor({ x: 1 }, "x"); // 객체의 고유 프로퍼티에서만 동작한다.
+
+// undefined를 반환
+Object.getOwnPropertyDescriptor({}, "toString");
+```
+
+- Object.defineProperty( ) : 프로퍼티의 속성을 설정하거나 임의의 속성으로 새 프로퍼티를 만들기 위해서 사용
+
+```javascript
+let o = {}; // 빈 객체
+
+// 데이터 프로퍼티 x를 설정한다. 값은 1이고, 열거가 불가능하다.
+Object.defineProperty(o, "x", {
+  value: 1,
+  writable: true,
+  enumerable: false,
+  configurable: true,
+});
+
+o.x; // => 1
+Object.keys(o); // => [] 열거가 불가능하기 때문에 빈 배열을 반환한다.
+```
+
+> - defineProperty( ) 의 인자에 4가지 프로퍼티가 있을 필요는 없다. 생략된 속성은 false 나 undefined 로 처리된다.
+> - 기존 프로퍼티의 속성을 수정할 경우, 생략한 속성은 기존 값 그대로 유지한다.
+> - 기존 프로퍼티나 새로 만든 고유 프로퍼티의 속성은 변경하지만, 상속받은 속성은 바꾸지 않는다.
+> - object.defineProperties를 통해 동시에 여러 개의 프로퍼티를 만들거나 수정한다.
+
+- object.defineProperties 호출 시 유의 사항
+
+  1. extensible 하지 않은 객체는, 기존의 고유 프로퍼티를 수정할 수는 있지만, 새 프로퍼티를 추가할 수 없다.
+  2. 프로퍼티의 configurable 속성 값이 false라면, configurable 속성 값뿐 아니라 enumerable 속성 값도 바꿀 수 없다.
+  3. 접근자 프로퍼티의 configurable 속성 값이 false라면, getter/setter 메서드를 변경할 수도 없고, 데이터 프로퍼티도 바꿀 수 없다.
+  4. 데이터 프로퍼티의 configurable 속성 값이 false라면, 데이터 프로퍼티를 접근자 프로퍼티로 바꿀 수 없다.
+  5. 데이터 프로퍼티의 configurable 속성 값이 false라면, 기존의 writable 속성을 false에서 true로 바꿀 수 없다. 하지만 true에서 false로는 가능하다.
+  6. 데이터 프로퍼티의 configurable 속성 값과 writable 속성 값이 false라면, 프로퍼티 값을 바꿀 수 없다. 하지만 프로퍼티의 configurable 속성 값이 true고, writable 속성 값이 false인 경우에는 프로퍼티의 값을 바꿀 수 있다. (writable을 true로 만들고 값을 수정하고 writable을 다시 false로 바꾸면 된다.)
+
+- extensible 속성 : 객체에 새 프로퍼티를 추가할 수 이쓴지 여부를 결정한다.
+  > - object.isExtensible(Object o) : 확장할 수 있는 객체인지 알아보는 메서드
+  > - object.preventExtensions(Object o) : 객체의 확장을 막는 메서드 -> 객체를 확장할 수 없도록 설정하면, 다시 이전 상태로 돌아갈 수 없다.
+  > - extensible 의 목적 : _잠겨있는_ 객체의 상태를 고정하고, 외부에서 변경하는 것을 막는 것이다.
+  > - Object.seal(Object o) : 객체를 확장할 수 없게 만들기 + 객체가 가진 모든 고유 프로퍼티를 설정 불가능하게 만들기 (객체에 새로운 프로퍼티 추가 불가능, 기존 프로퍼티의 설정 수정 및 삭제 불가능 // writable 속성이 true인 기존 프로퍼티의 값은 변경 가능)
+  > - Object.freeze(Object o) : 객체가 가진 고유 프로퍼티를 전부 읽기 전용으로 만든다. (객체가 접근자 프로퍼티로 setter 메서드를 갖는 경우, 이를 통해 프로퍼티 값 변경 가능)
+  > - seal & freeze는 주어진 객체의 고유 프로퍼티에만 영향을 미치고, 객체가 가진 프로토타입 객체에는 영향을 미치지 않는다.
