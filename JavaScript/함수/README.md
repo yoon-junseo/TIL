@@ -271,3 +271,139 @@ wrapper(); // -> babo
 ```
 
 > 스코프는 함수를 선언할 때 생기기 때문에, wrapper에서 log를 호출하면 log는 자기 스코프에 name 변수가 없기 때문에, 전역에 위치한 name = babo를 참조한다.
+
+### 4-5. 클로저에 대해서
+
+- 함수 객체와, 함수의 변수가 해석되는 유효범위를 아울러 클로저라고 부른다.
+- 모든 자바스크립트 함수는 클로저이다.
+  - 함수는 객체이고, 함수 자신과 관련된 유효범위 체인을 갖기 때문이다.
+
+```javascript
+let scope = "global scope";
+function checkScope() {
+  let scope = "local scope";
+  function f() {
+    return scope;
+  }
+  return f();
+}
+checkScope(); // -> local scope
+```
+
+> 앞서 언급했던 것처럼 스코프는 함수를 선언할 때 생기기 때문에, checkScope가 생성되는 시점의 scope인 local scope가 반환되는 것이다.
+> <br />
+
+```javascript
+let scope = "global scope";
+function checkScope() {
+  let scope = "local scope";
+  function f() {
+    return scope;
+  }
+  return f;
+}
+checkScope()(); // -> local scope
+```
+
+> 기본 규칙인 _자바스크립트 함수는 함수가 정의되었을 때의 유효범위 체인을 사용하여 실행된다._ 를 기억하면 된다. f의 scope는 "local scope"로 바인딩 되어 있다. 그렇기 때문에 어디서 실행해도 같은 scope를 갖는다.
+
+- 클로저는 자신을 정의한 바깥쪽 함수에 바인딩된 지역 변수를 포착한다.
+- 자바스크립트 함수가 호출될 때마다 해당 호출과 관련한 지역 변수를 보관하는 객체가 생성되고, 이 객체는 함수의 유효범위 체인에 추가된다.
+- 함수가 반환되면, 객체와 바인딩된 변수는 유효범위 체인에서 제거된다.
+- 중첩 함수 객체가 바깥쪽 함수 내부에만 사용된다면, 중첩 함수는 그들이 참조하는 변수들과 함께 가비지 컬렉션된다.
+- 어떤 함수가 중첩 함수를 정의하고 그 함수를 반환하거나 어딘가의 프로퍼티로 저장한다면, 함수 외부에 중첩 함수에 대한 참조가 생긴다. 이 경우, 중첩 함수와 해당 중첩 함수가 참조하는 변수 또한 가비지 컬렉션되지 않는다.
+
+## 5. 함수 프로퍼티, 메서드, 생성자
+
+- 함수는 객체이기 때문에, 프로퍼티와 메서드를 가질 수 있다.
+- Functions() 라는 생성자도 갖고 있다.
+
+### 5-1. prototype 프로퍼티
+
+- 모든 함수는 서로 다른 프로토타입 객체를 가지고 있다.
+- 함수가 생성자로 사용될 때, 새로 생성된 객체는 함수의 프로토타입 객체로부터 프로퍼티들을 상속받는다.
+
+### 5-2. call( )과 apply( ) 메서드
+
+- call과 apply는 어떤 함수를 다른 객체의 메서드인 것처럼 간접적으로 호출할 수 있게 한다.
+
+```javascript
+f.call(o); // 첫 번째 인자는 호출되는 함수와 관련이 있는 객체
+f.apply(o); // 첫 번째 인자는 호출되는 함수와 관련이 있는 객체
+
+// 위 아래 코드는 비슷한 작동을 한다.
+
+o.m = f; // f를 o의 임시 메서드로 만든다.
+o.m(); // 아무 인자 없이 호출.
+```
+
+- call, apply의 첫 번째 인자는 함수 내에서 this 값이 된다.
+
+```javascript
+f.call(o, 1, 2); // f 함수에 1과 2를 전달하고 이 함수를 객체 o의 메서드로 호출
+f.apply(o, [1, 2]); // 배열을 인자로 전달
+```
+
+```javascript
+const numbers = [1, 3, 2, 4, 5];
+let biggest1 = Math.max.apply(Math, numbers);
+let biggest2 = Math.max(...numbers);
+```
+
+### 5-3. bind( ) 메서드
+
+- bind의 주요 목적은 함수와 객체를 서로 묶는 것이다.
+
+```javascript
+let x = 9;
+const module = {
+  x: 81,
+  getX: function () {
+    return this.x;
+  },
+};
+
+module.getX(); // -> 81
+
+const retrieveX = module.getX;
+retrieveX(); // -> 9 - 함수가 전역 스코프에서 호출됐음
+
+// module과 바인딩된 'this'가 있는 새로운 함수 생성
+const boundGetX = retrieveX.bind(module);
+boundGetX(); // 81
+```
+
+### 5-4. Function( ) 생성자
+
+```javascript
+// 아래 두 함수는 같은 역할을 하는 함수를 생성한다.
+const f1 = new Function("x", "y", "return x*y;");
+const f2 = function (x, y) {
+  return x * y;
+};
+```
+
+- 함수 리터럴과 마찬가지로 Function( ) 생성자는 익명 함수를 생성한다.
+- Function( ) 생성자의 특징
+  1. 동적으로 자바스크립트 함수를 생성하고 실행 시간에 컴파일이 가능
+  2. 생성자가 호출될 때마다 함수 몸체를 분석하여 새로운 함수 객체를 생성한다.
+     - 루프 내부 또는 자주 호출되는 함수 내에서 생성자를 호출한다면 이는 비효율적이다.
+     - 중첩된 함수나 함수 정의 표현식은 루프 내에 있더라도 매번 재컴파일되지 않는다.
+  3. 어휘적 유효범위(lexcial scoping)를 사용하지 않는다.
+     - 함수 생성자가 생성한 함수는 항상 최상위 레벨 함수로 컴파일 된다.
+
+```javascript
+let scope = "global";
+function constructFunction() {
+  let scope = "local";
+  return new Function("return scope");
+}
+constructFunction()(); // -> global
+```
+
+`권장 X`
+
+### 더 알아볼 것
+
+1. 고차 함수
+2. currying & partial application
