@@ -69,6 +69,33 @@ const reg = /[^(]*/; // 시작 괄호가 아닌 0개 이상의 문자와 매치
 | g    | 전역 매칭을 수행. 즉, 처음 매치에서 끝내지 않고 모든 매치를 찾음                         |
 | m    | 여러 줄 모드. ^은 줄의 시작이나 문자열의 시작과 일치, $는 줄의 끝이나 문자열의 끝과 일치 |
 
+### 정규식에서 쓰이는 메소드
+
+| 메소드  | 의미                                                                                                                 |
+| ------- | -------------------------------------------------------------------------------------------------------------------- |
+| exec    | 대응되는 문자열을 찾는 RegExp 메소드이다. 정보를 가지고 있는 배열을 반환하고, 못 찾았다면 null을 반환한다.           |
+| test    | 대응되는 문자열이 있는지 검사하는 RegExp 메소드이다. true 나 false를 반환한다.                                       |
+| match   | 대응되는 문자열을 찾는 String 메소드이다. 정보를 가지고 있는 배열을 반환하고, 못 찾았다면 null을 반환한다.           |
+| search  | 대응되는 문자열이 있는지 검사하는 String 메소드이다. 대응된 부분의 인덱스를 반환하고, 그렇지 못했다면 -1을 반환한다. |
+| replace | 대응되는 문자열을 찾아 다른 문자열로 치환하는 String 메소드이다.                                                     |
+| split   | 정규식 혹은 문자열로 대상 문자열을 나누어 배열로 반환하는 String 메소드이다.                                         |
+
+```javascript
+const s = "babo123babo";
+const reg = /babo/g;
+
+//RegExp 메소드 -> 정규표현식.메소드
+// String 메소드 -> 문자열.메소드
+
+reg.exec(s); // ['babo', index: 0, input: 'babo123babo', groups: undefined]
+reg.test(s); // true
+s.match(reg); // ['babo', 'babo']
+s.search(reg); // 0
+s.replace(reg, "junseo"); // 'junseo123junseo'
+s.split(reg); // ['', '123', '']
+s.split(reg).join("junseo"); // 'junseo123junseo'
+```
+
 ## 관련 문제
 
 https://programmers.co.kr/learn/courses/30/lessons/72410?language=javascript
@@ -106,3 +133,35 @@ function solution(new_id) {
   return answer;
 }
 ```
+
+## 관련 문제
+
+> https://programmers.co.kr/learn/courses/30/lessons/81301
+
+```javascript
+function solution(s) {
+  var answer = 0;
+  const num = [
+    { 0: "zero" },
+    { 1: "one" },
+    { 2: "two" },
+    { 3: "three" },
+    { 4: "four" },
+    { 5: "five" },
+    { 6: "six" },
+    { 7: "seven" },
+    { 8: "eight" },
+    { 9: "nine" },
+  ];
+  num.forEach((data, key) => {
+    if (s.includes(num[key][key])) {
+      const reg = new RegExp(num[key][key], "g");
+      s = s.replace(reg, key);
+    }
+  });
+  answer = parseInt(s);
+  return answer;
+}
+```
+
+- 변수를 정규 표현식에서 사용하기 위해서는 RegExp 정규 표현식 생성자를 사용해야 한다. 첫 번째 인자로는 변수를 담고, 두 번째 인자로는 플래그를 설정하면 된다.
