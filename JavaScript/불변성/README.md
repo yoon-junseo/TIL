@@ -317,3 +317,8 @@ export default User;
 
 > 상기 코드에서 함수형의 경우 React.memo를 사용하면 리렌더링이 방지되고, React.memo를 제거하면 input 값이 변하는 경우에 계속 리렌더링이 발생한다. <br />
 > 만약 클래스형으로 구현하는 경우에는 React.memo 대신에 shouldComponentUpdate를 사용하면 된다,
+
+> Reference
+>
+> - https://blog.naver.com/backsajang420/221358585106
+> - https://salgum1114.github.io/reactjs/2019-11-28-react-class-equivalents/
