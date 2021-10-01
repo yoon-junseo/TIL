@@ -81,3 +81,9 @@ window.addEventListener("popstate", (e) => {
   // 리렌더링
 });
 ```
+
+## 코드 레퍼런스
+
+- https://kdydesign.github.io/2020/10/06/spa-route-tutorial/
+- https://velog.io/@seeh_h/VanilaJS%EB%A1%9C-SPA-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+- https://github.com/Siihyun/CODEV21-FRONT
