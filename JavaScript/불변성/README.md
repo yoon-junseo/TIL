@@ -21,7 +21,7 @@
 let name = "foo";
 let newName = name;
 name = "bar";
-// 첫 문장의 'foo'는 string 타입의 값이 메모리에 생성되고, name은 'foo'의 메모리 값을 그리킨다.
+// 첫 문장의 'foo'는 string 타입의 값이 메모리에 생성되고, name은 'foo'의 메모리 값을 가리킨다.
 // 두 번째 문장은 newName은 name이 가리키고 있는 'foo'의 메모리 값을 가리킨다.
 // 세 번째 문장에서 'bar'라는 string 타입의 값이 메모리에 생성되고, name은 'bar'의 메모리 값을 가리킨다.
 ```
@@ -37,7 +37,7 @@ let obj2 = { a: 2 };
 obj1 === obj2; // false -> 참조하는 메모리 영역이 다르기 때문에
 
 let obj3 = obj2;
-obj3 === obj2; // true -> 같은 객체를 가르킴 (동일 메모리 영역을 가르킨다.)
+obj3 === obj2; // true -> 같은 객체를 가킴 (동일 메모리 영역을 가리킨다.)
 
 obj2.a = 2;
 console.log(obj3.a); // 2
